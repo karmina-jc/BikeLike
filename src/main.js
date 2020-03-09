@@ -28,116 +28,136 @@ const behavior = new H.mapevents.Behavior(mapEvents);
 
 const ui = H.ui.UI.createDefault(map, maptypes);
 
-// Create the parameters for the geocoding request:
-const geocodingParams = {
-    searchText: 'av portugal 968 santiago'
+const btnRuta = document.getElementById('Ruta')
+
+btnRuta.addEventListener('click', () => {
+  const startValue = {
+    searchText: document.getElementById('Desde').value
+  };
+  const finishValue = {
+    searchText: document.getElementById('Hasta').value
   };
 
-// Define a callback function to process the geocoding response:
-const onResult2 = function(result) {
-let locations = result.Response.View[0].Result,
-    position,
-    marker;
-// Add a marker for each location found
-for (let i = 0;  i < locations.length; i++) {
-  position = {
-    lat: locations[i].Location.DisplayPosition.Latitude,
-    lng: locations[i].Location.DisplayPosition.Longitude
-  };
-  marker = new H.map.Marker(position);
-  map.addObject(marker);
-}
-};
+  // Define a callback function to process the geocoding response:
+  const convertPoint = function(result) {
+  let locations = result.Response.View[0].Result,
+    position;
+   
+  // Add a marker for each location found
+  for (let i = 0;  i < locations.length; i++) {
+    position = {
+      lat: locations[i].Location.DisplayPosition.Latitude,
+      lng: locations[i].Location.DisplayPosition.Longitude
+    };  
+    }
+    const routingParameters = {
+      // The routing mode:
+      'mode': 'fastest;car',
+      // The start point of the route:
+      'waypoint0': `geo!${position.lat},${position.lng}`,
+      // The end point of the route:
+      'waypoint1': `geo!${position.lat},${position.lng}`,
+      // To retrieve the shape of the route we choose the route
+      // representation mode 'display'
+      'representation': 'display'
+    };
 
-// Get an instance of the geocoding service:
-var geocoder = platform.getGeocodingService();
+    const ruteOp = function(result) {
+      let route,
+        routeShape,
+        startPoint,
+        endPoint,
+        linestring;
+        
+        
+      if(result.response.route) {
+      // Pick the first route from the response:
+      route = result.response.route[0];
+      // Pick the route's shape:
+      routeShape = route.shape;
+    
+      // Create a linestring to use as a point source for the route line
+      linestring = new H.geo.LineString();
+    
+      // Push all the points in the shape into the linestring:
+      routeShape.forEach(function(point) {
+        let parts = point.split(',');
+        linestring.pushLatLngAlt(parts[0], parts[1]);
+      });    
+         
+      // Retrieve the mapped positions of the requested waypoints:
+      startPoint = route.waypoint[0].mappedPosition;
+      endPoint = route.waypoint[1].mappedPosition;
 
-// Call the geocode method with the geocoding parameters,
-// the callback and an error callback function (called if a
-// communication error occurs):
-geocoder.geocode(geocodingParams, onResult2, function(e) {
-alert(e);
-});
-
-/*const routingParameters = {
-    // The routing mode:
-    'mode': 'fastest;pedestrian',
-    // The start point of the route:
-    'waypoint0': 'geo!50.1120423728813,8.68340740740811',
-    // The end point of the route:
-    'waypoint1': 'geo!52.5309916298853,13.3846220493377',
-    // To retrieve the shape of the route we choose the route
-    // representation mode 'display'
-    'representation': 'display'
-  };
-  
-  // Define a callback function to process the routing response:
-const onResult = function(result) {
-    let route,
-      routeShape,
-      startPoint,
-      endPoint,
-      linestring;
-      
-    if(result.response.route) {
-    // Pick the first route from the response:
-    route = result.response.route[0];
-    // Pick the route's shape:
-    routeShape = route.shape;
-  
-    // Create a linestring to use as a point source for the route line
-    linestring = new H.geo.LineString();
-  
-    // Push all the points in the shape into the linestring:
-    routeShape.forEach(function(point) {
-      let parts = point.split(',');
-      linestring.pushLatLngAlt(parts[0], parts[1]);
-    });
-  
-    // Retrieve the mapped positions of the requested waypoints:
-    startPoint = route.waypoint[0].mappedPosition;
-    endPoint = route.waypoint[1].mappedPosition;
-  
-    // Create a polyline to display the route:
-    const routeLine = new H.map.Polyline(linestring, {
-      style: { strokeColor: 'blue', lineWidth: 3 }
-    });
-  
-    // Create a marker for the start point:
-    const startMarker = new H.map.Marker({
+      // Create a polyline to display the route:
+      const routeLine = new H.map.Polyline(linestring, {
+        style: { strokeColor: 'blue', lineWidth: 3 }
+      });
+          // Create a marker for the start point:
+      let startMarker = new H.map.Marker({
       lat: startPoint.latitude,
       lng: startPoint.longitude
-    });
+      });
   
-    // Create a marker for the end point:
-    var endMarker = new H.map.Marker({
+      // Create a marker for the end point:
+      let endMarker = new H.map.Marker({
       lat: endPoint.latitude,
       lng: endPoint.longitude
-    });
+      });
   
-    // Add the route polyline and the two markers to the map:
-    map.addObjects([routeLine, startMarker, endMarker]);
+      // Add the route polyline and the two markers to the map:
+      map.addObjects([routeLine, startMarker, endMarker]);
   
-    // Set the map's viewport to make the whole route visible:
-    map.getViewModel().setLookAtData({bounds: routeLine.getBoundingBox()});
+      // Set the map's viewport to make the whole route visible:
+      map.getViewModel().setLookAtData({bounds: routeLine.getBoundingBox()});
     }
-  };
+    };
+    const router = platform.getRoutingService();
   
-  // Get an instance of the routing service:
-  var router = platform.getRoutingService();
-  
-  // Call calculateRoute() with the routing parameters,
-  // the callback and an error callback function (called if a
-  // communication error occurs):
-  router.calculateRoute(routingParameters, onResult,
+    router.calculateRoute(routingParameters, ruteOp,
     function(error) {
       alert(error.message);
-    });*/
+    });
 
-/*fetch('https://weather.ls.hereapi.com/weather/1.0/report.json?apiKey=luAvmoHbQUvxSVLucOwLZlrXOQ9JvIjUWuYPjqU1nsY&product=observation&name=Santiago')
+  };
+
+   // Get an instance of the geocoding service:
+  const geocoder = platform.getGeocodingService();
+
+  geocoder.geocode(startValue, convertPoint, function(e) {
+  alert(e);
+  });
+
+  geocoder.geocode(finishValue, convertPoint, function(e) {
+  alert(e);
+  });
+})
+// Create the parameters for the geocoding request:
+
+
+fetch('https://weather.ls.hereapi.com/weather/1.0/report.json?apiKey=luAvmoHbQUvxSVLucOwLZlrXOQ9JvIjUWuYPjqU1nsY&product=observation&name=Santiago')
 .then(res => res.json())
-.then(data => console.log(data.observations))
+.then(data => {
+  let weatherData = data.observations.location
+  for (let i = 0; i < weatherData.length; i++) {
+    let position = {
+      lat: weatherData[i].latitude,
+      lng: weatherData[i].longitude
+    };
+    console.log(position)
+    let marker = new H.map.Marker(position);
+    map.addObject(marker);
+    if(parseInt(weatherData[i].highTemperature) >= 28 && weatherData[i].skyDescription === 'Clear'){
+      // Create an info bubble object at a specific geographic location:
+      let bubble = new H.ui.InfoBubble({position}, {
+      content: '<b>Dia caluros y despejado, recuerda usar bloqueador</b>'
+      });
+      // Add info bubble to the UI:
+      ui.addBubble(bubble);
+    }
+  }
+})
 
-fetch('https://route.ls.hereapi.com/routing/7.2/calculateroute.json?apiKey=luAvmoHbQUvxSVLucOwLZlrXOQ9JvIjUWuYPjqU1nsY&waypoint0=geo!52.5,13.4&waypoint1=geo!52.5,13.45&mode=fastest;bicycle;traffic:disabled')
+/*fetch('https://route.ls.hereapi.com/routing/7.2/calculateroute.json?apiKey=luAvmoHbQUvxSVLucOwLZlrXOQ9JvIjUWuYPjqU1nsY&waypoint0=geo!52.5,13.4&waypoint1=geo!52.5,13.45&mode=fastest;bicycle;traffic:disabled')
 .then(res => res.json())
 .then(data => console.log(data))*/
