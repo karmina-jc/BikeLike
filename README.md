@@ -1,6 +1,6 @@
-# Check Weather
+# BikeLike
 
-## Clima en tiempo real
+## Conoce y evalua tus rutas en Bicicleta.
 
-Applicacion web que permite recibir recomendaciones para cuidado personal segun el pronostico del clima del lugar al que nos dirigimos. Los datos climaticos son relevados en tiempo real a través de la **Destination Weather API Rest de Here**
+Bienvenido a BikeLike, en nuestra aplicaciones puedes ingresar la direccion de partida y destino de tu recorrido para conocer la ruta más rápida en bicicleta. Además, usando nuestros pines puedes marcar los tramos en la ruta que se encuentran en buen estado o bien si hay algún lugar peligroso o con baches.
 ```
