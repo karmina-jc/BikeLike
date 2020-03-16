@@ -1,0 +1,55 @@
+body{
+    background-color: rgb(93, 111, 189);
+}
+h1{
+    text-align: center;
+    color: orange;
+    font-family: sans-serif;
+}
+h1 > img{
+    max-width: 200px;
+}
+.description{
+    display: flex;
+    justify-content: center;
+}
+h4{
+    max-width: 800px;
+    color: whitesmoke;
+    font-family: sans-serif;
+}
+p{
+    text-align: center;
+    color: whitesmoke;
+    font-family: sans-serif;
+}
+.input{
+    text-align: center;
+}
+.input input{
+    border-radius: 5px;
+    font-family: sans-serif;
+}
+.userOption{
+    display: flex;
+    justify-content: center;
+}
+.userOption img{
+    display: flex;
+    justify-self: center;
+    max-width: 50px;
+}
+.userOption button{
+    display: flex;
+    flex-direction: column;
+    justify-items: center;
+    border-radius: 10px;
+    font-family: sans-serif;
+}
+.userOption button:hover{
+    background-color:rgb(238, 230, 120) ;
+}
+.map{
+    display: flex;
+    justify-content: center;
+}

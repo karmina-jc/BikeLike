@@ -2,19 +2,36 @@
 <html lang="es">
   <head>
     <meta charset="UTF-8">
-    <title>Check Weather</title>
+    <title>BikeLike</title>
     <meta name="viewport" content="initial-scale=1.0, width=device-width" />
     <script src="https://js.api.here.com/v3/3.1/mapsjs-core.js" type="text/javascript" charset="utf-8"></script>
     <script src="https://js.api.here.com/v3/3.1/mapsjs-service.js" type="text/javascript" charset="utf-8"></script>
     <script src="https://js.api.here.com/v3/3.1/mapsjs-mapevents.js" type="text/javascript" charset="utf-8"></script>
+    <script src="https://js.api.here.com/v3/3.1/mapsjs-clustering.js" type="text/javascript" charset="utf-8"></script>
     <script src="https://js.api.here.com/v3/3.1/mapsjs-ui.js" type="text/javascript" charset="utf-8"></script>
-    <link rel="stylesheet" type="text/css" href="https://js.api.here.com/v3/3.1/mapsjs-ui.css" />
+    <link rel="stylesheet" type="text/css" href="https://js.api.here.com/v3/3.1/mapsjs-ui.css"/>
+    <link rel="stylesheet" type="text/css" href="./style.css"/>
   </head>
   <body>
+    <h1><img src="./bicycle.png" alt=""> BikeLike </h1>
+    <div class="description"><h4>Bienvenido a BikeLike, en nuestra aplicaciones puedes ingresar la direccion de partida y destino de tu recorrido para conocer la ruta más rápida en bicicleta. Además, usando nuestros pines puedes marcar los tramos en la ruta que se encuentran en buen estado o bien si hay algún lugar peligroso o con baches.</h4>
+    </div>
+    <p>1. Escribe tu direccion de partida y de destino, para trazar la ruta más rápida</p>
+    <div class="input">
+    <input type="text" id="Desde" placeholder="Desde">
     <input type="text" id="Hasta" placeholder="Destino">
-    <input type="text" id="Ciudad" placeholder="Ciudad">
-    <button id='Ruta'>Recomendacion para hoy</button>
-    <div style="width: 840px; height: 680px" id="root"></div>
-    <script type="module" src="main.js"></script>
+    <button id='Ruta'>Ver Ruta</button>
+    </div>
+    <p>2. Selecciona un pin</p>
+    <div class="userOption">
+      <button id="like" value="like"><img src="./heart.png" alt=""> Ruta en buen estado</button>
+      <button id="hole" value="hole"><img src="./hole.png" alt=""> Zona de baches</button>
+      <button id="danger" Value="danger"><img src="./warning.png" alt=""> Zona peligrosa</button>     
+    </div>
+    <p>3. Haz click en en punto de la ruta que deseas marcar con tu pin</p>
+    <div class="map">
+    <div style="width: 800px; height: 600px" id="root"></div>
+    </div>    
+    <script type="module" src="data.js"></script>
   </body>
 </html>
